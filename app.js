@@ -6,6 +6,7 @@ var ballSpeedY = 7;
 var canvas, canvasContext;
 const PADDLE_WIDTH = 100;
 const PADDLE_THICKNESS = 10;
+const PADDLE_DIST_FROM_EDGE = 60;
 var paddleX = 400;
 
 function updateMousePos(evt) {
@@ -32,6 +33,11 @@ function updateAll() {
   drawAll();
 }
 
+function ballReset() {
+  ballX = canvas.clientWidth / 2;
+  ballY = canvas.clientHeight / 2;
+}
+
 function moveAll() {
   ballX += ballSpeedX;
   ballY += ballSpeedY;
@@ -49,6 +55,20 @@ function moveAll() {
   }
 
   if (ballY > canvas.clientHeight) {
+    ballReset();
+  }
+
+  var paddleTopEdgeY = canvas.clientHeight - PADDLE_DIST_FROM_EDGE;
+  var paddleBottomEdgeY = paddleTopEdgeY + PADDLE_THICKNESS;
+  var paddleLeftEdgeX = paddleX;
+  var paddleRightEdgeX = paddleX + PADDLE_WIDTH;
+
+  if (
+    ballY > paddleTopEdgeY &&
+    ballY < paddleBottomEdgeY &&
+    ballX > paddleLeftEdgeX &&
+    ballX < paddleRightEdgeX
+  ) {
     ballSpeedY *= -1;
   }
 }
@@ -59,7 +79,7 @@ function drawAll() {
 
   colorRect(
     paddleX,
-    canvas.clientHeight - PADDLE_THICKNESS,
+    canvas.clientHeight - PADDLE_DIST_FROM_EDGE,
     PADDLE_WIDTH,
     PADDLE_THICKNESS,
     "white"
